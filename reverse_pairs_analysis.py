@@ -21,30 +21,42 @@ RESULTS_DIR_DEFAULT = 'results'
 # Algorithm 1: Brute Force Approach
 def count_reverse_pairs_brute_force(arr):
     # Check every pair (i, j) and make note of ones where i < j and a[i] > 2 * a[j]
-    count = 0
+    rev_pair_count = 0
     n = len(arr)
     for i in range(n):
         for j in range(i + 1, n):
             if arr[i] > 2 * arr[j]:
-                count += 1
-    return count
+                rev_pair_count += 1
+    return rev_pair_count
 
 # Algorithm 2: Modified Merge Sort Approach
 def count_reverse_pairs_merge_sort(arr):
     def merge_count(arr, temp_arr, left, mid, right):
-        # Merge two sorted halves and count cross-half reverse pairs.
         i = left
         j = mid + 1
         k = left
-        inv_count = 0
+        rev_pair_count = 0
+
+        # PASS 1: Count only (do NOT merge here)
+        # Use two independent pointers to find pairs where arr[i] > 2 * arr[j]
+        j_count = mid + 1  # Separate pointer so we don't disturb the merge
+        for i in range(left, mid + 1):
+            # Advance j_count while the 2x condition holds
+            while j_count <= right and arr[i] > 2 * arr[j_count]:
+                j_count += 1
+            # All elements arr[mid+1..j_count-1] satisfy arr[i] > 2 * arr[x]
+            rev_pair_count += (j_count - (mid + 1))
+
+        # PASS 2: Merge only (standard merge, separate from counting for reverse pairs)
+        # Below is just standard merging process foung in merge sort nothing super fancy
+        i = left
+        j = mid + 1
         while i <= mid and j <= right:
             if arr[i] <= arr[j]:
                 temp_arr[k] = arr[i]
                 i += 1
             else:
                 temp_arr[k] = arr[j]
-                # All remaining values in left half are greater than arr[j].
-                inv_count += (mid - i + 1)
                 j += 1
             k += 1
         while i <= mid:
@@ -57,16 +69,19 @@ def count_reverse_pairs_merge_sort(arr):
             k += 1
         for i in range(left, right + 1):
             arr[i] = temp_arr[i]
-        return inv_count
 
+        return rev_pair_count
+    
+    # Recursively splits the array in half, sorts each half, and accumulates
+    # reverse pair counts from the left half, right half, and cross paths
     def merge_sort_count(arr, temp_arr, left, right):
-        inv_count = 0
+        rev_pair_count = 0
         if left < right:
             mid = (left + right) // 2
-            inv_count += merge_sort_count(arr, temp_arr, left, mid)
-            inv_count += merge_sort_count(arr, temp_arr, mid + 1, right)
-            inv_count += merge_count(arr, temp_arr, left, mid, right)
-        return inv_count
+            rev_pair_count += merge_sort_count(arr, temp_arr, left, mid)
+            rev_pair_count += merge_sort_count(arr, temp_arr, mid + 1, right)
+            rev_pair_count += merge_count(arr, temp_arr, left, mid, right)
+        return rev_pair_count
 
     n = len(arr)
     if n == 0:
@@ -82,7 +97,7 @@ def measure_time(algorithm, arr, num_runs=5):
     times = []
     for _ in range(num_runs):
         arr_copy = arr.copy()
-        start = time.perf_counter()
+        start = time.perf_counter() 
         algorithm(arr_copy)
         end = time.perf_counter()
         times.append((end - start) * 1000)  # ms
