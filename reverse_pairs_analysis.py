@@ -15,6 +15,7 @@ RESULTS_DIR_DEFAULT = 'results'
 
 # Algorithm 1: Brute Force Approach
 def count_reverse_pairs_brute_force(arr):
+    # Check every pair (i, j) with i < j.
     count = 0
     n = len(arr)
     for i in range(n):
@@ -26,6 +27,7 @@ def count_reverse_pairs_brute_force(arr):
 # Algorithm 2: Modified Merge Sort
 def count_reverse_pairs_merge_sort(arr):
     def merge_count(arr, temp_arr, left, mid, right):
+        # Merge two sorted halves and count cross-half reverse pairs.
         i = left
         j = mid + 1
         k = left
@@ -36,6 +38,7 @@ def count_reverse_pairs_merge_sort(arr):
                 i += 1
             else:
                 temp_arr[k] = arr[j]
+                # All remaining values in left half are greater than arr[j].
                 inv_count += (mid - i + 1)
                 j += 1
             k += 1
@@ -64,11 +67,13 @@ def count_reverse_pairs_merge_sort(arr):
     if n == 0:
         return 0
     temp_arr = [0] * n
+    # Work on a copy so the original input array is not modified.
     arr_copy = arr.copy()
     return merge_sort_count(arr_copy, temp_arr, 0, n - 1)
 
 # Timing function
 def measure_time(algorithm, arr, num_runs=5):
+    # Run multiple times and report mean/std for stability.
     times = []
     for _ in range(num_runs):
         arr_copy = arr.copy()
@@ -80,6 +85,7 @@ def measure_time(algorithm, arr, num_runs=5):
 
 # Generate test data
 def generate_test_arrays(sizes, seed=42):
+    # Fixed seed keeps experiments reproducible.
     random.seed(seed)
     test_data = {}
     for size in sizes:
@@ -88,6 +94,7 @@ def generate_test_arrays(sizes, seed=42):
 
 # Run experiments
 def run_experiments(num_runs=5, quick=False):
+    # Quick mode uses smaller inputs for faster checks.
     if quick:
         sizes = [50, 200, 500, 1000]
         large_sizes = [2000]
@@ -130,6 +137,7 @@ def run_experiments(num_runs=5, quick=False):
     }
 
     print("\nRunning experiments for merge sort on larger inputs...")
+    # Skip brute force here because O(n^2) is too slow at large n.
     for size in large_sizes:
         print(f"Testing size: {size}")
         arr = large_test_data[size]
@@ -175,6 +183,7 @@ def plot_growth_comparison(results, results_dir):
              marker='o', label='Brute Force (Actual)', linewidth=2, markersize=8)
     plt.plot(sizes, results['merge_sort_times'],
              marker='s', label='Merge Sort (Actual)', linewidth=2, markersize=8)
+    # Fit simple constants so theoretical curves align in scale with measurements.
     c1 = results['brute_force_times'][-1] / (sizes[-1] ** 2)
     c2 = results['merge_sort_times'][-1] / (sizes[-1] * np.log2(sizes[-1]))
     theoretical_n2 = c1 * (sizes ** 2)
@@ -220,6 +229,7 @@ def save_results_csv(results, large_results, results_dir):
     print(f"  Saved: {out}")
 
 def verify_algorithms():
+    # Small correctness suite before running timing experiments.
     test_cases = [
         ([1, 3, 2, 3, 1], 4),
         ([2, 4, 1, 3, 5], 3),
@@ -266,6 +276,7 @@ def parse_args():
 if __name__ == "__main__":
     args = parse_args()
     results_dir = args.results_dir
+    # Create output folder if it does not exist.
     os.makedirs(results_dir, exist_ok=True)
 
     print("\n" + "=" * 60)
