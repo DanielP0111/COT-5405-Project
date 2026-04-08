@@ -14,12 +14,12 @@ This project presents a comparison of two algorithms that solve the **Reverse Pa
 Given an array `arr[]`, count the number of pairs `(i, j)` such that:
 
 - `i < j`
-- `arr[i] > arr[j]`
+- `arr[i] > 2 * arr[j]`
 
 **Example:**
 Input: [1, 3, 2, 3, 1]
-Output: 4
-Pairs: (1,4), (2,3), (2,4), (3,4)
+Output: 2
+Pairs: (3, 1) (3, 1)
 
 ## Algorithms Implemented
 

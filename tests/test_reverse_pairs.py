@@ -37,7 +37,7 @@ class TestReversePairs(unittest.TestCase):
 
                 # We pass in as an argument a copy of the array into our algorithms and see if the algorithm returns the correct pair count
                 self.assertEqual(count_reverse_pairs_brute_force(arr.copy()), expected)
-                # self.assertEqual(count_reverse_pairs_merge_sort(arr.copy()), expected)
+                self.assertEqual(count_reverse_pairs_merge_sort(arr.copy()), expected)
 
 
 if __name__ == "__main__": # auto runs if it is ran from directly
