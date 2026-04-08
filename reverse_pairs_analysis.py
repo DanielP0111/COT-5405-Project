@@ -1,12 +1,17 @@
-#!/usr/bin/env python3
-import time
-import random
-import matplotlib
 import argparse
-import os
 import csv
+import os
+import random
+import time
+
+#needed for plotting and numpy for mean, etc
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+
+#These are imports needed to run the unit tests we created in test_reverse_pairs.py
+import unittest
+from tests import test_reverse_pairs 
 
 # Use Agg backend for headless environments
 matplotlib.use('Agg')
@@ -228,42 +233,6 @@ def save_results_csv(results, large_results, results_dir):
             ])
     print(f"  Saved: {out}")
 
-def verify_algorithms():
-    # Small correctness suite before running timing experiments.
-    test_cases = [
-        ([1, 3, 2, 3, 1], 4),
-        ([2, 4, 1, 3, 5], 3),
-        ([5, 4, 3, 2, 1], 10),
-        ([1, 2, 3, 4, 5], 0),
-        ([1], 0),
-        ([2, 1], 1),
-    ]
-    print("=" * 60)
-    print("VERIFYING ALGORITHM CORRECTNESS")
-    print("=" * 60)
-    all_passed = True
-    for i, (arr, expected) in enumerate(test_cases):
-        bf_result = count_reverse_pairs_brute_force(arr.copy())
-        ms_result = count_reverse_pairs_merge_sort(arr.copy())
-        bf_correct = bf_result == expected
-        ms_correct = ms_result == expected
-        match = bf_result == ms_result
-        status = "✓ PASS" if (bf_correct and ms_correct and match) else "✗ FAIL"
-        if not (bf_correct and ms_correct and match):
-            all_passed = False
-        print(f"\nTest {i+1}: {arr}")
-        print(f"  Expected:     {expected}")
-        print(f"  Brute Force:  {bf_result} {'✓' if bf_correct else '✗'}")
-        print(f"  Merge Sort:   {ms_result} {'✓' if ms_correct else '✗'}")
-        print(f"  Status:       {status}")
-    print("\n" + "=" * 60)
-    if all_passed:
-        print("ALL TESTS PASSED ✓")
-    else:
-        print("SOME TESTS FAILED ✗")
-    print("=" * 60 + "\n")
-    return all_passed
-
 def parse_args():
     parser = argparse.ArgumentParser(description='Reverse Pairs Algorithm Analysis')
     parser.add_argument('--results-dir', default=RESULTS_DIR_DEFAULT, help='Directory to save outputs')
@@ -272,6 +241,14 @@ def parse_args():
     parser.add_argument('--no-plot', action='store_true', help='Do not open plots (headless/CI)')
     parser.add_argument('--save-data', action='store_true', help='Save timing CSV data to results dir')
     return parser.parse_args()
+
+# Run unit tests
+def run_unit_tests():
+    result = unittest.TextTestRunner().run(unittest.defaultTestLoader.loadTestsFromModule(test_reverse_pairs))
+    if not result.wasSuccessful():
+        print("ERROR: The unit tests failed. This means the algorithms did not correctly get the amount of reverse pairs. Revise algorithms and re run.")
+        exit(1)  # Exit if tests fail
+
 
 if __name__ == "__main__":
     args = parse_args()
@@ -284,10 +261,9 @@ if __name__ == "__main__":
     print("Kevin Pereda & Daniel Perera")
     print("COT 5405 - Design and Analysis of Algorithms")
     print("=" * 60 + "\n")
-
-    if not verify_algorithms():
-        print("ERROR: Algorithm verification failed. Please check implementation.")
-        exit(1)
+    
+    # First, run the unit tests
+    run_unit_tests()
 
     print("\nStarting performance experiments...")
     results, large_results = run_experiments(num_runs=args.num_runs, quick=args.quick)
