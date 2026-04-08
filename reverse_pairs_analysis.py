@@ -1,3 +1,7 @@
+# Composed by Kevin Pereda and Daniel Perera
+# COT 5405 - Dr. Andrew Steinberg
+# Final Project
+
 import argparse
 import csv
 import os
@@ -91,7 +95,7 @@ def count_reverse_pairs_merge_sort(arr):
     arr_copy = arr.copy()
     return merge_sort_count(arr_copy, temp_arr, 0, n - 1)
 
-# This function takes the algorithm the array we are testing it on and the amount of runs
+# This function takes the algorithm, the array we are testing it on, and the amount of runs
 # We want to run it 5 times to make sure result doesnt get skewed from a single fluke
 def measure_time(algorithm, arr, num_runs=5):
     # Run multiple times and report mean/std for stability.
@@ -101,8 +105,8 @@ def measure_time(algorithm, arr, num_runs=5):
         start = time.perf_counter() #perf counter is higher precision than time.time
         algorithm(arr_copy) #run algorithm on copy of array so it always gets unsorted input
         end = time.perf_counter() # end timer 
-        times.append((end - start) * 1000)  # ms
-    return float(np.mean(times)), float(np.std(times)) # after all 5 runs we just want to return the average time and how much it varied across runs
+        times.append((end - start) * 1000)  # convert to ms
+    return float(np.mean(times)), float(np.std(times)) # after all 5 runs we just want to return the average time and how much it varied across runs (standard deviation)
 
 # This function generates our test arrays that algorithms will be detecting reverse pairs for
 def generate_test_arrays(sizes, seed=42):
