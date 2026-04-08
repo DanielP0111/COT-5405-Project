@@ -51,10 +51,6 @@ python reverse_pairs_analysis.py --quick --save-data
 
 python reverse_pairs_analysis.py --num-runs 5 --save-data
 
-# Run without opening plot windows (CI / headless)
-
-python reverse_pairs_analysis.py --no-plot --save-data
-
 # Outputs are saved under the `results/` directory:
 
 # - scalability_graph.png
