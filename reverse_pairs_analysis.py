@@ -20,16 +20,16 @@ RESULTS_DIR_DEFAULT = 'results'
 
 # Algorithm 1: Brute Force Approach
 def count_reverse_pairs_brute_force(arr):
-    # Check every pair (i, j) with i < j.
+    # Check every pair (i, j) and make note of ones where i < j and a[i] > 2 * a[j]
     count = 0
     n = len(arr)
     for i in range(n):
         for j in range(i + 1, n):
-            if arr[i] > arr[j]:
+            if arr[i] > 2 * arr[j]:
                 count += 1
     return count
 
-# Algorithm 2: Modified Merge Sort
+# Algorithm 2: Modified Merge Sort Approach
 def count_reverse_pairs_merge_sort(arr):
     def merge_count(arr, temp_arr, left, mid, right):
         # Merge two sorted halves and count cross-half reverse pairs.
@@ -244,7 +244,7 @@ def parse_args():
 
 # Run unit tests
 def run_unit_tests():
-    result = unittest.TextTestRunner().run(unittest.defaultTestLoader.loadTestsFromModule(test_reverse_pairs))
+    result = unittest.TextTestRunner().run(unittest.defaultTestLoader.loadTestsFromModule(test_reverse_pairs)) #load unit test module from out test_reverse_pairs file
     if not result.wasSuccessful():
         print("ERROR: The unit tests failed. This means the algorithms did not correctly get the amount of reverse pairs. Revise algorithms and re run.")
         exit(1)  # Exit if tests fail
