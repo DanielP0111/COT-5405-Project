@@ -104,11 +104,13 @@ def measure_time(algorithm, arr, num_runs=5):
         times.append((end - start) * 1000)  # ms
     return float(np.mean(times)), float(np.std(times)) # after all 5 runs we just want to return the average time and how much it varied across runs
 
-# Generate test data
+# This function generates our test arrays that algorithms will be detecting reverse pairs for
 def generate_test_arrays(sizes, seed=42):
     # Fixed seed keeps experiments reproducible.
     random.seed(seed)
     test_data = {}
+    #go through each size in sizes since we do different input sizes to see how run time
+    #for algorithm scales i.e array of size (200, 500, 1000) and fill them with rand numbers
     for size in sizes:
         test_data[size] = [random.randint(1, 10000) for _ in range(size)]
     return test_data
@@ -170,7 +172,9 @@ def run_experiments(num_runs=5, quick=False):
 
     return results, large_results
 
-# Visualization functions (save to results_dir)
+### Below 3 functions are matplot functions that provide all settings to customize how graphs look and will appear ###
+
+# Scalability graph
 def plot_scalability(results, large_results, results_dir):
     plt.figure(figsize=(12, 7))
     plt.errorbar(results['sizes'], results['brute_force_times'],
@@ -197,6 +201,7 @@ def plot_scalability(results, large_results, results_dir):
     plt.close()
     print(f"  Saved: {out}")
 
+# Growth comparison graph
 def plot_growth_comparison(results, results_dir):
     plt.figure(figsize=(12, 7))
     sizes = np.array(results['sizes'])
@@ -224,6 +229,7 @@ def plot_growth_comparison(results, results_dir):
     plt.close()
     print(f"  Saved: {out}")
 
+# This saves all results recieved in a CSV
 def save_results_csv(results, large_results, results_dir):
     out = os.path.join(results_dir, 'timing_results.csv')
     with open(out, 'w', newline='') as f:
@@ -249,6 +255,7 @@ def save_results_csv(results, large_results, results_dir):
             ])
     print(f"  Saved: {out}")
 
+#Defines arguments user can define when calling reverse_pairs_analysis.py 
 def parse_args():
     parser = argparse.ArgumentParser(description='Reverse Pairs Algorithm Analysis')
     parser.add_argument('--results-dir', default=RESULTS_DIR_DEFAULT, help='Directory to save outputs')
@@ -266,6 +273,7 @@ def run_unit_tests():
         exit(1)  # Exit if tests fail
 
 
+# Main function
 if __name__ == "__main__":
     args = parse_args()
     results_dir = args.results_dir
