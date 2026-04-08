@@ -53,8 +53,6 @@ python reverse_pairs_analysis.py --num-runs 5 --save-data
 
 # Outputs are saved under the `results/` directory:
 
-# - scalability_graph.png
-
-# - growth_comparison.png
-
-# - timing_results.csv
+- scalability_graph.png
+- growth_comparison.png
+- timing_results.csv
