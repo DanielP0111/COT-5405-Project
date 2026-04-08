@@ -168,39 +168,6 @@ def plot_scalability(results, large_results, results_dir):
     plt.close()
     print(f"  Saved: {out}")
 
-def plot_theoretical_validation(results, large_results, results_dir):
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
-    sizes = np.array(results['sizes'])
-    bf_times = np.array(results['brute_force_times'])
-    bf_normalized = bf_times / (sizes ** 2)
-    ax1.plot(sizes, bf_normalized, marker='o', linewidth=2, markersize=8, color='C0')
-    ax1.axhline(y=np.mean(bf_normalized), color='r', linestyle='--',
-                label=f'Average: {np.mean(bf_normalized):.2e}', linewidth=2)
-    ax1.set_xlabel('Array Size (n)', fontsize=12)
-    ax1.set_ylabel('T(n) / n²', fontsize=12)
-    ax1.set_title('Brute Force: Normalized by n²', fontsize=13, fontweight='bold')
-    ax1.legend(fontsize=10)
-    ax1.grid(True, alpha=0.3)
-
-    all_sizes = np.array(results['sizes'] + large_results['sizes'])
-    all_ms_times = np.array(results['merge_sort_times'] + large_results['merge_sort_times'])
-    if all_sizes.size > 0:
-        ms_normalized = all_ms_times / (all_sizes * np.log2(all_sizes))
-        ax2.plot(all_sizes, ms_normalized, marker='s', linewidth=2, markersize=8, color='C1')
-        ax2.axhline(y=np.mean(ms_normalized), color='r', linestyle='--',
-                    label=f'Average: {np.mean(ms_normalized):.2e}', linewidth=2)
-    ax2.set_xlabel('Array Size (n)', fontsize=12)
-    ax2.set_ylabel('T(n) / (n log n)', fontsize=12)
-    ax2.set_title('Modified Merge Sort: Normalized by n log n', fontsize=13, fontweight='bold')
-    ax2.legend(fontsize=10)
-    ax2.grid(True, alpha=0.3)
-
-    plt.tight_layout()
-    out = os.path.join(results_dir, 'theoretical_validation.png')
-    plt.savefig(out, dpi=300, bbox_inches='tight')
-    plt.close()
-    print(f"  Saved: {out}")
-
 def plot_growth_comparison(results, results_dir):
     plt.figure(figsize=(12, 7))
     sizes = np.array(results['sizes'])
@@ -316,7 +283,6 @@ if __name__ == "__main__":
 
     print("\nGENERATING VISUALIZATIONS")
     plot_scalability(results, large_results, results_dir)
-    plot_theoretical_validation(results, large_results, results_dir)
     plot_growth_comparison(results, results_dir)
 
     if args.save_data:

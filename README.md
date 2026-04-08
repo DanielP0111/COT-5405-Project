@@ -35,6 +35,10 @@ Pairs: (1,4), (2,3), (2,4), (3,4)
 - **Space Complexity:** O(n)
 - **Technique:** Divide and Conquer
 
+## Python Version
+
+- **Python 3.10 or 3.11**
+
 # Install dependencies (recommended inside a virtualenv)
 
 pip install -r requirements.txt
@@ -54,8 +58,6 @@ python reverse_pairs_analysis.py --no-plot --save-data
 # Outputs are saved under the `results/` directory:
 
 # - scalability_graph.png
-
-# - theoretical_validation.png
 
 # - growth_comparison.png
 
